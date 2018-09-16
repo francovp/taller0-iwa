@@ -45,17 +45,25 @@ var todo = {
 			var html = "";
 			
 			for(var i = 0; i < data.length; i++){
-				html += "<tr><th scope='row' class='id-tarea'>"+data[i].id+"</th><td class='titulo-tarea'>"+ data[i].titulo +"</td><td class='estado-tarea'>" + data[i].nombre_estado + "</td><td class='desc-tarea' hidden>"+data[i].descripcion+"</td></tr>";
+				html += "<tr><th scope='row' class='id-tarea'>"+data[i].id+"</th><td class='titulo-tarea'><a href='#'>"+ data[i].titulo +"</a></td><td class='estado-tarea'>" + data[i].nombre_estado + "</td><td class='desc-tarea' hidden>"+data[i].descripcion+"</td></tr>";
 			}
 			
 			$("#todo-table tbody").html(html);
 			
-			$("#todo-table tbody tr").on("click", function() {
-				var titulo =  $(this).find(".titulo-tarea").text();
-				var estado = $(this).find(".estado-tarea").text();
-				var id = $(this).find(".id-tarea").text();
-				var desc = $(this).find(".desc-tarea").text();
+			$("#todo-table tbody tr a").on("click", function() {
+				var contexto = $(this).parent().parent();
+				
+				var titulo =  contexto.find(".titulo-tarea").text();
+				var estado = contexto.find(".estado-tarea").text();
+				var id = contexto.find(".id-tarea").text();
+				var desc = contexto.find(".desc-tarea").text();
 				var nuevoEstado;
+				
+				var selected = contexto.hasClass("highlight");
+				$("#todo-table tbody tr").removeClass("highlight");
+				if(!selected) {
+					contexto.addClass("highlight");
+				}
 				
 				$("#detalle-tarea").html("<h1>"+id+" "+titulo+"</h1><p>"+desc+"</p>");
 				
@@ -70,7 +78,8 @@ var todo = {
 				$("#detalle-tarea").on("click","#cambiar-estado",function(){
 					todo.cambiarEstado(id,nuevoEstado,titulo,desc);
 				});
-					
+				
+				$('html,body').animate({scrollTop: $("#detalle-tarea").offset().top},'slow');
 			});
 			console.log("ok");
 			console.log(data);
@@ -154,7 +163,7 @@ var todo = {
 		tabla = document.getElementById("todo-table");
 		tr = tabla.getElementsByTagName("tr");
 		for (i = 0; i < tr.length; i++) {
-			td = tr[i].getElementsByTagName("td")[1];
+			td = tr[i].getElementsByTagName("td")[0];
 			if (td) {
 				if (td.innerHTML.toUpperCase().indexOf(filtro) > -1) {
 					tr[i].style.display = "";
