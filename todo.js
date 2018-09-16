@@ -77,10 +77,23 @@ var todo = {
 		});
 	},
 	validarForm: function(){
-		
-		
 	},
 	filtrar: function(){
+		var inputFiltro, filtro, tabla, tr, td, i;
+		inputFiltro = document.getElementById("filtro");
+		filtro = inputFiltro.value.toUpperCase();
+		tabla = document.getElementById("todo-table");
+		tr = tabla.getElementsByTagName("tr");
+		for (i = 0; i < tr.length; i++) {
+			td = tr[i].getElementsByTagName("td")[1];
+			if (td) {
+				if (td.innerHTML.toUpperCase().indexOf(filtro) > -1) {
+					tr[i].style.display = "";
+				} else {
+					tr[i].style.display = "none";
+				}
+			}       
+		}
 	},
 	modificarTarea: function(){
 	}
