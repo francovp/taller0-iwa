@@ -7,33 +7,8 @@
         <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
         <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.min.css" />
-
-        <script>
-            // Usando jQuery
-            $().ready(function() {
-                alert("Documento listo!");
-                console.log("Listo!");
-
-                // Actualizamos el texto del elemento con id 'frase'
-                $('#frase').text("Hola!");
-
-                // Haciendo llamada Ajax al backend
-                console.log("Iniciando llamada Ajax");
-                $.get('http://localhost:8000/tareas', function(data, textStatus, jqXHR) {
-                /** Caso exitoso
-                El método .get solo permite manejar el caso exitoso.
-                Para manejar errores hay que usar $.ajax
-                Ver documentación... http://api.jquery.com/jquery.ajax/ **/                
-    
-                    console.log("Ajax exitoso!");
-                    console.log(data);
-
-                }).fail(function(x) {
-                    console.log("Error en la llamada Ajax :(");
-                    console.log(x);
-                });
-            });
-        </script>
+		
+        <script src="todo.js"></script>
         
     </head>
     <body>
@@ -45,10 +20,44 @@
         <div class="container">
             <div class="row">
                 <div class="col-4-md">
-                    AQUI VA EL FORMULARIO
+					<form>
+						<div class="form-group">
+							<label for="titulo">Título</label>
+							<input type="text" class="form-control" id="titulo" aria-describedby="tituloHelp" >
+						</div>
+						<div class="form-group" id="alert-titulo" style="display:none">
+							<div class="alert alert-danger">
+							  El título debe tener un largo mayor a 5 caracteres
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="descripcion">Descripción (<span id="cont">0</span>)</label>
+							<textarea id="descripcion" class="form-control" rows="2" id="comment"></textarea>
+						</div>
+						<div class="form-group" id="alert-desc" style="display:none">
+							<div class="alert alert-danger">
+							  La descripción debe tener largo mayor a 10 caracteres
+							</div>
+						</div>
+						<button type="submit" class="btn btn-primary" disabled>Crear Tarea</button>
+					</form>
                 </div>
                 <div class="col-8-md">
-                    AQUI VA LA TABLA
+					<div class="table-responsive">
+
+						<table class="table" id="todo-table">
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">Título</th>
+									<th scope="col">Estado</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+							</tbody>
+						</table>
+					</div>
                 </div>
             </div>            
 
@@ -56,7 +65,8 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    AQUI VA EL DETALLE DE LA TABLA
+					<div class="containter" id="detalle-tarea">
+					</div>
                     <span id="frase"></span>
                 </div>
             </div>
