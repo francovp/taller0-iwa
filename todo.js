@@ -48,7 +48,7 @@ var todo = {
 				html += "<tr><th scope='row' class='id-tarea'>"+data[i].id+"</th><td class='titulo-tarea'>"+ data[i].titulo +"</td><td class='estado-tarea'>" + data[i].nombre_estado + "</td><td class='desc-tarea' hidden>"+data[i].descripcion+"</td></tr>";
 			}
 			
-			$("#todo-table tbody").append(html);
+			$("#todo-table tbody").html(html);
 			
 			$("#todo-table tbody tr").on("click", function() {
 				var titulo =  $(this).find(".titulo-tarea").text();
@@ -80,8 +80,9 @@ var todo = {
 			console.log(x);
 		});
 		
-		$("#form-todo").submit(function() {
+		$("#form-todo").submit(function(e) {
 			todo.nuevaTarea();
+			e.preventDefault();
 		});
 		
 	},
@@ -99,6 +100,18 @@ var todo = {
 			data: JSON.stringify(data), 
 			success: function(res) {
 				console.log(res);
+
+				
+				if(nuevoEstado == 1){
+					$("#cambiar-estado").text("Pasar a estado Terminada");
+					$("#detalle-tarea").on("click","#cambiar-estado",function(){
+						todo.cambiarEstado(id,nuevoEstado+1,titulo,desc);
+					});
+				}
+				if(nuevoEstado == 2){
+					$("#cambiar-estado").remove();
+				}
+				todo.cargar();
 			},
 			error: function(err) {
 				console.log(err.responseText);
@@ -119,6 +132,7 @@ var todo = {
 			data: form.serialize(),
 			success: function(res) {
 				console.log(res);
+				todo.cargar();
 			},
 			error: function(err) {
 				console.log(err.responseText);
