@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <html>
     <head>
         <title>Todo Listo!</title>
@@ -19,7 +20,7 @@
 
         <div class="container">
             <div class="row">
-                <div class="col-4-md">
+                <div class="col-3-md">
 					<form id="form-todo">
 						<div class="form-group">
 							<label for="titulo">Título</label>
@@ -43,7 +44,11 @@
 						<button type="submit" id="crear-tarea" class="btn btn-primary" disabled>Crear Tarea</button>
 					</form>
                 </div>
-                <div class="col-8-md">
+                 <div class="col-md-9">
+					<h1>Todo Listo!</h1>
+					<div class="form-group">
+						<input type="text" placeholder="Buscar tarea por título" class="form-control" onkeyup="todo.filtrar();" id="filtro" aria-describedby="tituloFiltro">
+					</div>
 					<div class="table-responsive">
 
 						<table class="table" id="todo-table">
