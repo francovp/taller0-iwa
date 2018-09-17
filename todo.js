@@ -15,6 +15,8 @@ const ESTADOS = [{
 
 var todo = {
 	cargar: function(){
+
+      	$("#modificar-tarea").hide();
 				
 		$('#titulo').keyup(function() {
 			var chars = $(this).val().length;
@@ -51,53 +53,88 @@ var todo = {
 			$("#todo-table tbody").html(html);
 			
 			$("#todo-table tbody tr a").on("click", function() {
-				var contexto = $(this).parent().parent();
-				
-				var titulo =  contexto.find(".titulo-tarea").text();
-				var estado = contexto.find(".estado-tarea").text();
-				var id = contexto.find(".id-tarea").text();
-				var desc = contexto.find(".desc-tarea").text();
-				var nuevoEstado;
-				
-				var selected = contexto.hasClass("highlight");
-				$("#todo-table tbody tr").removeClass("highlight");
-				if(!selected) {
-					contexto.addClass("highlight");
-				}
-				
-				$("#detalle-tarea").html("<h1>"+id+" "+titulo+"</h1><p>"+desc+"</p>");
-				
-				if(estado == ESTADOS[0].nombre){
-					$("#detalle-tarea").append("<button class='btn btn-primary' id='cambiar-estado'>Pasar a estado En Proceso</button>");
-					nuevoEstado = ESTADOS[1].id;
-				}
-				if(estado == ESTADOS[1].nombre){
-					$("#detalle-tarea").append("<button class='btn btn-primary' id='cambiar-estado'>Pasar a estado Terminada</button>");
-					nuevoEstado = ESTADOS[2].id;
-				}
-				$("#detalle-tarea").on("click","#cambiar-estado",function(){
-					todo.cambiarEstado(id,nuevoEstado,titulo,desc);
-				});
-				
-				$('html,body').animate({scrollTop: $("#detalle-tarea").offset().top},'slow');
-			});
-			console.log("ok");
-			console.log(data);
+              var contexto = $(this).parent().parent();
+              var titulo = contexto.find(".titulo-tarea").text();
+              var estado = contexto.find(".estado-tarea").text();
+              var id = contexto.find(".id-tarea").text();
+              var desc = contexto.find(".desc-tarea").text();
+              var nuevoEstado = estado;
+
+              var selected = contexto.hasClass("highlight");
+              $("#todo-table tbody tr").removeClass("highlight");
+              if (!selected) {
+                contexto.addClass("highlight");
+              }
+
+              $("#detalle-tarea").html("<h1>" + id + " " + titulo + "</h1><p>" + desc + "</p>");
+
+              if (estado == ESTADOS[0].nombre) {
+                $("#detalle-tarea").append("<button class='btn btn-primary' id='cambiar-estado'>Pasar a estado En Proceso</button>");
+                nuevoEstado = ESTADOS[1].id;
+              }
+              if (estado == ESTADOS[1].nombre) {
+                $("#detalle-tarea").append("<button class='btn btn-primary' id='cambiar-estado'>Pasar a estado Terminada</button>");
+                nuevoEstado = ESTADOS[2].id;
+              }
+              $("#detalle-tarea").on("click", "#cambiar-estado", function () {
+                todo.cambiarEstado(id, nuevoEstado, titulo, desc);
+              });
+
+              $("#type-form").val(2); // Cambiar formulario a tipo modificar
+
+              $("#crear-tarea").hide();
+              $("#modificar-tarea").show();
+              $("#limpiar-form").show();
+
+              console.log("id: ", id);
+              console.log("desc: ", desc);
+              console.log("titulo: ", titulo);
+              console.log("type-form: ", $("#type-form").val());
+
+              $("#titulo").val(titulo);
+              $("#descripcion").val(desc);
+
+              $("#form-todo").on("click", "#modificar-tarea", function () {
+                var nuevoTitulo = $("#titulo").val();
+                var nuevaDesc = $("#descripcion").val();
+                console.log("nuevoTitulo: ", nuevoTitulo);
+                console.log("nuevoDesc: ", nuevaDesc);
+                console.log("id: ", id);
+                console.log("estado: ", estado);
+
+                todo.cambiarEstado(id, estado, nuevoTitulo, nuevaDesc);
+
+              });
+
+              $('html,body').animate({scrollTop: $("#detalle-tarea").offset().top}, 'slow');
+
+              $("#limpiar-form").prop("disabled",false);
+
+              console.log("ok");
+              console.log(data);
+            });
 
 		}).fail(function(x) {
 			console.log("Error");
 			console.log(x);
 		});
-		
-		$("#form-todo").submit(function(e) {
-			todo.nuevaTarea();
-			e.preventDefault();
+
+		$("#form-todo").on("click", "#crear-tarea", function(){
+          todo.nuevaTarea();
 		});
+
+		  $("#form-todo").on("click", "#limpiar-form", function(){
+            $("#titulo").val();
+            $("#descripcion").val();
+            $("#modificar-tarea").hide();
+            $("#limpiar-form").hide();
+            $("#crear-tarea").show();
+		  });
 		
 	},
 	cambiarEstado: function(id,nuevoEstado,titulo,desc){
 		var url = API+id+"/";
-		var data ={
+		var data = {
 			"titulo": titulo,
 			"descripcion": desc,
 			"estado": nuevoEstado
@@ -151,8 +188,10 @@ var todo = {
 	validarForm: function(){
 		if(($("#titulo").val() != '' && $("#descripcion").val() != '') && ($("#alert-titulo").is(":hidden") && $("#alert-desc").is(":hidden"))){
 			$("#crear-tarea").prop("disabled",false);
+          	$("#modificar-tarea").prop("disabled",false);
 		}else{
 			$("#crear-tarea").prop("disabled",true);
+          	$("#modificar-tarea").prop("disabled",true);
 		}
 		
 	},
